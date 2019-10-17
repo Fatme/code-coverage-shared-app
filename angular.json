@@ -120,6 +120,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "w11"
+    }
+  },
+  "defaultProject": "w11",
+  "cli": {
+    "defaultCollection": "@nativescript/schematics"
+  }
 }
