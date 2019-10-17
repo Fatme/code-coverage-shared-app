@@ -5,4 +5,14 @@ import { Component } from '@angular/core';
   templateUrl: './app.component.html',
 })
 
-export class AppComponent { }
+export class AppComponent {
+  public title = 'tnsTitle';
+
+  public testMethod1(x: number) {
+    if (x === 3) {
+      return 3;
+    }
+
+    return 10;
+  }
+}

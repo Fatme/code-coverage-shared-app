@@ -1,6 +1,8 @@
-// A sample Jasmine test
-describe("A suite", function() {
-  it("contains spec with an expectation", function() {
-    expect(true).toBe(true);
+import { AppComponent } from '@src/app/app.component';
+
+describe('app component', () => {
+  it('should return 3', () => {
+    const appComponent = new AppComponent();
+    expect(appComponent.testMethod1(3)).toEqual(3);
   });
 });
