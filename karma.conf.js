@@ -9,7 +9,6 @@ module.exports = function (config) {
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine'],
 
-
     // list of files / patterns to load in the browser
     files: ['src/tests/**/*.ts'],
 
@@ -24,11 +23,19 @@ module.exports = function (config) {
     preprocessors: {
     },
 
+    plugins: [
+      'karma-jasmine',
+      'karma-coverage-istanbul-reporter',
+      'karma-coverage',
+      'karma-webpack',
+      'karma-nativescript-launcher'
+    ],
+
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage-istanbul'],
 
 
     // web server port
@@ -51,6 +58,12 @@ module.exports = function (config) {
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: [],
+
+    coverageIstanbulReporter: {
+      dir: require('path').join(__dirname, 'coverage'),
+      reports: ['html', 'lcovonly', 'text-summary'],
+      fixWebpackSourcePaths: true
+    },
 
     customLaunchers: {
       android: {
@@ -90,6 +103,7 @@ function setWebpackPreprocessor(config, options) {
         options.preprocessors[file] = [];
       }
       options.preprocessors[file].push('webpack');
+      options.preprocessors[file].push('coverage');
     });
   }
 }
@@ -101,6 +115,13 @@ function setWebpack(config, options) {
     env.sourceMap = config.debugBrk;
     env.appPath = config.appPath;
     options.webpack = require('./webpack.config')(env);
+    options.webpack.module.rules.push(
+        {
+          test: /\.ts$/,
+          use: { loader: 'istanbul-instrumenter-loader', options: { esModules: true } },
+          enforce: 'post'
+        }
+    );
     delete options.webpack.entry;
     delete options.webpack.output.libraryTarget;
     const invalidPluginsForUnitTesting = ["GenerateBundleStarterPlugin", "GenerateNativeScriptEntryPointsPlugin"];
